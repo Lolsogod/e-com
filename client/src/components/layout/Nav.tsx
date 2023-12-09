@@ -5,26 +5,27 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-/*li ul fix*/
+import Cart from "../widgets/Cart";
+
 const Nav = () => {
   return (
-    <NavigationMenu>
-      <NavigationMenuList className="flex justify-end w-screen p-4">
-        <Link to="/">
+    <NavigationMenu className="">
+      <NavigationMenuList className="flex justify-between p-4 w-screen">
+        <h1 className="text-2xl font-bold  self-start">TrueGadget</h1>
+        <div>
           <NavigationMenuItem className={navigationMenuTriggerStyle()}>
-            Домой
+            <Link to="/"> Домой</Link>
           </NavigationMenuItem>
-        </Link>
-        <Link to="/auth">
           <NavigationMenuItem className={navigationMenuTriggerStyle()}>
-            Войти
+            <Link to="/auth">Войти</Link>
           </NavigationMenuItem>
-        </Link>
-        <Link to="/t-admin">
           <NavigationMenuItem className={navigationMenuTriggerStyle()}>
-            Админка
+            <Link to="/t-admin">Админка</Link>
           </NavigationMenuItem>
-        </Link>
+          <NavigationMenuItem className={navigationMenuTriggerStyle()}>
+            <Cart/>
+          </NavigationMenuItem>
+        </div>
       </NavigationMenuList>
     </NavigationMenu>
   );

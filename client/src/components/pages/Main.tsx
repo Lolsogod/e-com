@@ -1,11 +1,12 @@
 import { trpc } from "@/utils/trpc";
+import { DeviceCard } from "../widgets/DeviceCard";
 
 const Main = () => {
-  const phones = trpc.device.get.useQuery()
+  const devices = trpc.device.get.useQuery()
   return (
-    <div>
-      {phones.data?.map((phone)=> (
-        <div>{phone.brand.name} {phone.name}</div>
+    <div className="flex gap-5 px-10 overflow-x-auto ">
+      {devices.data?.map((device)=> (
+        <DeviceCard key={device.id} device={device} />
       ))}
     </div>
   );
