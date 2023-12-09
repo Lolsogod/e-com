@@ -2,17 +2,17 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import { trpc } from "./utils/trpc";
 import { ThemeProvider } from "./components/theme-provider";
-import { Auth } from "./components/pages/Auth";
+import { RouterProvider } from "@tanstack/react-router";
+import { router } from "@/router/router"
 
 const queryClient = new QueryClient();
 const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
       url: "http://localhost:5000/trpc",
-      // You can pass any HTTP headers you wish here
       async headers() {
         return {
-          authorization: localStorage.getItem("token") || "", 
+          authorization: await localStorage.getItem("token") || "",
         };
       },
     }),
@@ -23,7 +23,7 @@ const App = () => {
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <trpc.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
-          <Auth />
+          <RouterProvider router={router} />
         </QueryClientProvider>
       </trpc.Provider>
     </ThemeProvider>

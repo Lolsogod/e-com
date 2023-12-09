@@ -7,7 +7,7 @@ export const Auth = () => {
   //todo: rhf зачекать?
   const register = trpc.user.register.useMutation();
   const login = trpc.user.login.useMutation();
-  const check = trpc.user.checkAuth.useQuery()
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -25,12 +25,10 @@ export const Auth = () => {
       localStorage.setItem("token", "Bearer " + res);
     });
   };
-  const handleCheck =  async () => {
-    check.refetch()
-  };
+  
   return (
     <>
-      <div className="flex flex-col gap-5 w-full max-w-sm m-auto items-center justify-center h-screen">
+      <div className="flex flex-col gap-5 max-w-sm m-auto items-center justify-center">
         <Input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -48,9 +46,6 @@ export const Auth = () => {
         </Button>
         <Button type="submit" onClick={handleLogin}>
           login
-        </Button>
-        <Button type="submit" onClick={handleCheck}>
-          check
         </Button>
       </div>
     </>

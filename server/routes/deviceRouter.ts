@@ -4,7 +4,11 @@ import { z } from "zod";
 //TODO: img as file? filters pagination, optionals
 export const deviceRouter = router({
   get: procedure.query(async () => {
-    return await prisma.device.findMany();
+    return await prisma.device.findMany({
+      include: {
+        brand: true,
+      },
+    });
   }),
   getOne: procedure
     .input(z.object({ id: z.number() }))
@@ -12,6 +16,9 @@ export const deviceRouter = router({
       return await prisma.device.findUnique({
         where: {
           id: input.id,
+        },
+        include: {
+          brand: true,
         },
       });
     }),
