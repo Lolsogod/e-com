@@ -4,6 +4,7 @@ import { trpc } from "./utils/trpc";
 import { ThemeProvider } from "./components/theme-provider";
 import { RouterProvider } from "@tanstack/react-router";
 import { router } from "@/router/router"
+import { useAuth } from "./store/useAuth";
 
 const queryClient = new QueryClient();
 const trpcClient = trpc.createClient({
@@ -12,7 +13,7 @@ const trpcClient = trpc.createClient({
       url: "http://localhost:5000/trpc",
       async headers() {
         return {
-          authorization: await localStorage.getItem("token") || "",
+          authorization: "Bearer " + await useAuth.getState().token
         };
       },
     }),

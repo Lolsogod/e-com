@@ -57,6 +57,8 @@ model Rating {
   deviceId Int
   user     User   @relation(fields: [userId], references: [id])
   device   Device @relation(fields: [deviceId], references: [id])
+
+  @@unique([userId, deviceId])
 }
 
 model Purchase {
@@ -73,8 +75,6 @@ model PurchaseDevice {
   deviceId   Int
   purchase   Purchase @relation(fields: [purchaseId], references: [id])
   device     Device   @relation(fields: [deviceId], references: [id])
-
-  @@unique([purchaseId, deviceId])
 }
 
 model DeviceInfo {

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { jwtDecode } from "jwt-decode";
+import { useCart } from "./useCart";
 type UserInfo = {
   id: string;
   email: string;
@@ -29,6 +30,7 @@ export const useAuth = create<AuthState>()(
       },
       token: "",
       login: async (token) => {
+        useCart.getState().clear()
         const userInfo = await parseToken(token);
         set((state) => ({
           ...state,
@@ -37,6 +39,7 @@ export const useAuth = create<AuthState>()(
         }));
       },
       logout: () => {
+        useCart.getState().clear()
         set({
           info: {
             id: "",

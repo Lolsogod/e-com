@@ -25,7 +25,6 @@ export const userRouter = router({
     )
     .mutation(async ({ input }) => {
       const { email, password } = input;
-      console.log(email, password);
       //TODO:надо ли? + разгрузить
       const candidate = await prisma.user.findUnique({
         where: { email },
@@ -83,6 +82,7 @@ export const userRouter = router({
           purchaseId: newPurchase.id,
         };
       });
+      console.log(purchaseDeviceRecords)
       await prisma.purchaseDevice.createMany({
         data: purchaseDeviceRecords,
       });
@@ -108,5 +108,5 @@ export const userRouter = router({
             }
           }
         })
-      })
+      }),
 });
