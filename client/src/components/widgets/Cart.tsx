@@ -33,7 +33,7 @@ const Cart = () => {
       <SheetTrigger asChild className={navigationMenuTriggerStyle()}>
         <span className="cursor-pointer">Корзина {count}</span>
       </SheetTrigger>
-      <SheetContent className="flex flex-col gap-1 max-h-screen">
+      <SheetContent className="flex flex-col gap-1 max-h-screen w-full  ">
         <SheetHeader>
           <SheetTitle>Корзина</SheetTitle>
         </SheetHeader>

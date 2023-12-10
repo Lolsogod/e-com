@@ -19,16 +19,16 @@ const DevicePage = () => {
         : 0;
     return (
       <>
-        <div className="flex justify-center gap-10 mt-[10vh]">
+        <div className="flex flex-col sm:flex-row justify-center gap-10 mt-[10vh]">
           <div className="flex justify-center items-center">
             <img
               loading="lazy"
               src={device.data.img}
               alt={device.data.name}
-              className="rounded-lg max-w-96 h-96"
+              className="max-w-96 max-h-96 w-auto h-auto block"
             />
           </div>
-          <div className="mt-8 flex flex-col justify-between">
+          <div className="mt-8 flex flex-col justify-between m-4">
             <div>
               <h1 className="text-3xl font-semibold tracking-tight">
                 {device.data.brand.name} {device.data.name}
