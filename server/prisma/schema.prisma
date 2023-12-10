@@ -14,23 +14,7 @@ model User {
   email    String   @unique
   password String
   role     String   @default("USER")
-  basket   Basket?
   ratings  Rating[]
-}
-
-model Basket {
-  id            Int            @id @default(autoincrement())
-  userId        Int            @unique
-  user          User           @relation(fields: [userId], references: [id])
-  basketDevices BasketDevice[]
-}
-
-model BasketDevice {
-  id       Int    @id @default(autoincrement())
-  basketId Int
-  deviceId Int
-  basket   Basket @relation(fields: [basketId], references: [id])
-  device   Device @relation(fields: [deviceId], references: [id])
 }
 
 model Device {
@@ -42,7 +26,6 @@ model Device {
   typeId        Int
   brandId       Int
   ratings       Rating[]
-  basketDevices BasketDevice[]
   deviceInfo    DeviceInfo?
   type          Type           @relation(fields: [typeId], references: [id])
   brand         Brand          @relation(fields: [brandId], references: [id])

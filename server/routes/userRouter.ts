@@ -39,9 +39,6 @@ export const userRouter = router({
       const user = await prisma.user.create({
         data: { email, password: hashedPassword, role: input.role },
       });
-      const basket = await prisma.basket.create({
-        data: { userId: user.id },
-      });
       const token = getJwt(user);
       return token;
     }),
@@ -68,19 +65,5 @@ export const userRouter = router({
     }),
   checkAuth: protectedProcedure.query(async ({ ctx }) => {
     return ctx.user;
-  }),
-  getCart: protectedProcedure.query(async ({ ctx }) => {
-    return await prisma.basket.findUnique({
-      where: { userId: ctx.user.id },
-      include: {
-        basketDevices: {
-          include: {
-            device: {
-              include: { brand: true },
-            },
-          },
-        },
-      },
-    });
   }),
 });

@@ -38,24 +38,4 @@ export const deviceRouter = router({
         data: input,
       });
     }),
-  addToCart: protectedProcedure
-    .input(z.object({ id: z.number() }))
-    .mutation(async ({ input, ctx }) => {
-      const basket = await prisma.basket.findUnique({
-        where: {
-          userId: ctx.user.id,
-        },
-      });
-      if (basket) {
-        return await prisma.basketDevice.create({
-          data: {
-            basketId: basket.id,
-            deviceId: input.id,
-          },
-        });
-      }else throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "Basket not found",
-      });
-    }),
 });
