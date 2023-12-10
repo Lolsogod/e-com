@@ -8,6 +8,8 @@ export const deviceRouter = router({
     return await prisma.device.findMany({
       include: {
         brand: true,
+        deviceInfo: true,
+        ratings: true
       },
     });
   }),

@@ -1,18 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/store/useAuth";
 import { trpc } from "@/utils/trpc";
 import { FieldValues, useForm } from "react-hook-form";
 
 const LoginPage = () => {
-  const login = trpc.user.login.useMutation();
+  const {login} = useAuth();
+  const loginMut = trpc.user.login.useMutation();
   const { register, handleSubmit } = useForm();
 
   const onSubmitLogin = async (data: FieldValues) => {
-    console.log(data);
-    const res = await login.mutateAsync({
+    const res = await loginMut.mutateAsync({
       email: data.email,
       password: data.password,
     });
+    login(res)
     localStorage.setItem("token", "Bearer " + res);
   };
 

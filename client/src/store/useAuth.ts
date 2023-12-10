@@ -1,6 +1,6 @@
-import { verify } from "jsonwebtoken";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import { jwtDecode } from "jwt-decode";
 type UserInfo = {
   id: string;
   email: string;
@@ -12,9 +12,10 @@ type AuthState = {
   login: (token: string) => void;
   logout: () => void;
 };
+
 const parseToken = async (token: string) => {
-    console.log("parsing...")
-  const info = await verify(token, process.env.SECRET || "123");
+  const info = await jwtDecode(token);
+  console.log(info);
   return info as UserInfo;
 };
 
@@ -27,14 +28,24 @@ export const useAuth = create<AuthState>()(
         role: "USER",
       },
       token: "",
-      login: (token) => {
+      login: async (token) => {
+        const userInfo = await parseToken(token);
         set((state) => ({
           ...state,
           token,
-          info: { ...state.info, ...parseToken(token) },
+          info: { ...state.info, ...userInfo },
         }));
       },
-      logout: () => {/**TODO: логаут */},
+      logout: () => {
+        set({
+          info: {
+            id: "",
+            email: "",
+            role: "USER",
+          },
+          token: "",
+        });
+      },
     }),
     {
       name: "auth",
