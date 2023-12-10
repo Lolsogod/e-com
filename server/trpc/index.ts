@@ -1,3 +1,4 @@
+import { User } from "@prisma/client";
 import { TRPCError, initTRPC } from "@trpc/server";
 import * as trpcExpress from "@trpc/server/adapters/express";
 import { verify } from "jsonwebtoken";
@@ -12,7 +13,7 @@ export async function createContext({
         req.headers.authorization.split(" ")[1],
         process.env.SECRET || "123"
       );
-      return user;
+      return user as User;
     }
     return null;
   }

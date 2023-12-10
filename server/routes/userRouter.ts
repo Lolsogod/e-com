@@ -66,7 +66,21 @@ export const userRouter = router({
       const token = getJwt(user);
       return token;
     }),
-    checkAuth: protectedProcedure.query(async ({ ctx }) => {
-      return ctx.user
-    })
+  checkAuth: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.user;
+  }),
+  getCart: protectedProcedure.query(async ({ ctx }) => {
+    return await prisma.basket.findUnique({
+      where: { userId: ctx.user.id },
+      include: {
+        basketDevices: {
+          include: {
+            device: {
+              include: { brand: true },
+            },
+          },
+        },
+      },
+    });
+  }),
 });
