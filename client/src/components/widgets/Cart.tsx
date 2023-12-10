@@ -8,6 +8,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { Separator } from "../ui/separator";
 import { Link } from "@tanstack/react-router";
 import { CartItem } from "./CartItem";
@@ -19,7 +20,7 @@ const Cart = () => {
   const cost = items.reduce((acc, item) => acc + item.device!.price, 0);
   return (
     <Sheet>
-      <SheetTrigger asChild>
+      <SheetTrigger asChild className={navigationMenuTriggerStyle()}>
         <span className="cursor-pointer">Корзина {count}</span>
       </SheetTrigger>
       <SheetContent className="flex flex-col gap-1 max-h-screen">
@@ -48,23 +49,29 @@ const Cart = () => {
                 ))}
               </div>
             </div>
+            <SheetFooter className="flex gap-2">
+              <SheetClose asChild>
+                <Link
+                  to="/"
+                  className={buttonVariants({ className: "w-full" })}
+                >
+                  К оплате
+                </Link>
+              </SheetClose>
+              <Button
+                className="w-full"
+                variant={"destructive"}
+                onClick={clear}
+              >
+                Очистить корзину
+              </Button>
+            </SheetFooter>
           </>
         ) : (
           <div className="flex-1 overflow-y-auto">
             <span className="text-muted-foreground">Ваша корзина пуста...</span>
           </div>
         )}
-
-        <SheetFooter className="flex gap-2">
-          <SheetClose asChild>
-            <Link to="/" className={buttonVariants({ className: "w-full" })}>
-              К оплате
-            </Link>
-          </SheetClose>
-          <Button className="w-full" variant={"destructive"} onClick={clear}>
-            Очистить корзину
-          </Button>
-        </SheetFooter>
       </SheetContent>
     </Sheet>
   );

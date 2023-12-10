@@ -11,19 +11,22 @@ const Nav = () => {
   return (
     <NavigationMenu className="">
       <NavigationMenuList className="flex justify-between p-4 w-screen">
-        <h1 className="text-2xl font-bold  self-start">TrueGadget</h1>
+        <Link to="/">
+          <h1 className="text-2xl font-bold  self-start">TrueGadget</h1>
+        </Link>
         <div>
-          <NavigationMenuItem className={navigationMenuTriggerStyle()}>
-            <Link to="/"> Домой</Link>
+          <NavigationMenuItem className="group inline-flex">
+            <Link className={navigationMenuTriggerStyle()} to="/auth">
+              Войти
+            </Link>
           </NavigationMenuItem>
-          <NavigationMenuItem className={navigationMenuTriggerStyle()}>
-            <Link to="/auth">Войти</Link>
+          <NavigationMenuItem className="group inline-flex">
+            <Link to="/t-admin" className={navigationMenuTriggerStyle()}>
+              Админка
+            </Link>
           </NavigationMenuItem>
-          <NavigationMenuItem className={navigationMenuTriggerStyle()}>
-            <Link to="/t-admin">Админка</Link>
-          </NavigationMenuItem>
-          <NavigationMenuItem className={navigationMenuTriggerStyle()}>
-            <Cart/>
+          <NavigationMenuItem className="group inline-flex">
+            <Cart />
           </NavigationMenuItem>
         </div>
       </NavigationMenuList>

@@ -3,6 +3,8 @@ import Layout from "@/components/Layout";
 import Main from "@/components/pages/Main";
 import { Auth } from "@/components/pages/Auth";
 import TempAdmin from "@/components/pages/TempAdmin";
+import DevicePage from "@/components/pages/DevicePage";
+import NotFound from "@/components/pages/NotFound";
 
 const rootRoute = new RootRoute({
   component: Layout,
@@ -12,6 +14,12 @@ const indexRoute = new Route({
   path: "/",
   component: Main,
 });
+
+const productRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: 'products/$deviceId',
+  component: DevicePage,
+})
 const authRoute = new Route({
   getParentRoute: () => rootRoute,
   path: '/auth',
@@ -22,9 +30,19 @@ const tempAdminRoute = new Route({
   path: '/t-admin',
   component: TempAdmin,
 })
+const notFoundRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: '*',
+  component: NotFound
+})
+const routeTree = rootRoute.addChildren([indexRoute, authRoute, tempAdminRoute, productRoute, notFoundRoute])
 
-const routeTree = rootRoute.addChildren([indexRoute, authRoute, tempAdminRoute])
-export const router = new Router({ routeTree })
+
+
+export const router = new Router({
+  routeTree,
+  
+})
 
 declare module '@tanstack/react-router' {
   interface Register {

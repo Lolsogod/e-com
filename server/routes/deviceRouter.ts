@@ -20,6 +20,8 @@ export const deviceRouter = router({
         },
         include: {
           brand: true,
+          deviceInfo: true,
+          ratings: true
         },
       });
     }),
