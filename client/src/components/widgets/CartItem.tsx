@@ -11,9 +11,9 @@ import { RouterOutputs } from "@/utils/trpc";
 
 type Device = RouterOutputs["device"]["getOne"];
 
-export function CartItem(props: { device: Device }) {
+export function CartItem(props: { device: Device, uid: number }) {
   const {removeItem} = useCart();
-  const { device } = props;
+  const { device, uid } = props;
   return (
     <Card className="flex items-center px-4">
       <img className="h-[75px]" src={device?.img} alt="image.." />
@@ -23,7 +23,7 @@ export function CartItem(props: { device: Device }) {
         </CardTitle>
         <CardDescription>{device?.price} руб.</CardDescription>
       </CardHeader>
-      <Button className="w-7 h-7 p-1 self-start mt-4" onClick={() => removeItem(device)} variant={"destructive"}>X</Button>
+      <Button className="w-7 h-7 p-1 self-start mt-4" onClick={() => removeItem(uid)} variant={"destructive"}>X</Button>
     </Card>
   );
 }

@@ -16,7 +16,7 @@ import { useCart } from "@/store/useCart";
 const Cart = () => {
   const { items, clear } = useCart();
   const count = items.length;
-  const cost = items.reduce((acc, item) => acc + item!.price, 0);
+  const cost = items.reduce((acc, item) => acc + item.device!.price, 0);
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -44,7 +44,7 @@ const Cart = () => {
             <div className="flex-1 overflow-y-auto">
               <div className="flex flex-col gap-4 mt-6">
                 {items.map((item) => (
-                  <CartItem key={item!.id} device={item} />
+                  <CartItem key={item!.uid} {...item} />
                 ))}
               </div>
             </div>
