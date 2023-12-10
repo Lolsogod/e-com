@@ -1,4 +1,4 @@
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetClose,
@@ -10,14 +10,24 @@ import {
 } from "@/components/ui/sheet";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { Separator } from "../ui/separator";
-import { Link } from "@tanstack/react-router";
 import { CartItem } from "./CartItem";
 import { useCart } from "@/store/useCart";
+import { trpc } from "@/utils/trpc";
+import { router } from "@/router/router";
 
 const Cart = () => {
+  
+  const purchase = trpc.user.purchase.useMutation();
   const { items, clear } = useCart();
   const count = items.length;
   const cost = items.reduce((acc, item) => acc + item.device!.price, 0);
+  const handlePayment = async () => {
+    const ids = items.map((item) => item.device!.id);
+    await purchase.mutateAsync({ ids }).then((purchase) => {
+      clear();
+      router.navigate({to:"/purchases/$purchaseId", params:{purchaseId:String(purchase.id)}});
+    });
+  };
   return (
     <Sheet>
       <SheetTrigger asChild className={navigationMenuTriggerStyle()}>
@@ -51,12 +61,9 @@ const Cart = () => {
             </div>
             <SheetFooter className="flex gap-2">
               <SheetClose asChild>
-                <Link
-                  to="/"
-                  className={buttonVariants({ className: "w-full" })}
-                >
+                <Button className="w-full" onClick={handlePayment}>
                   К оплате
-                </Link>
+                </Button>
               </SheetClose>
               <Button
                 className="w-full"

@@ -10,27 +10,28 @@ datasource db {
 // schema.prisma
 
 model User {
-  id       Int      @id @default(autoincrement())
-  email    String   @unique
-  password String
-  role     String   @default("USER")
-  ratings  Rating[]
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  password  String
+  role      String     @default("USER")
+  ratings   Rating[]
+  purchases Purchase[]
 }
 
 model Device {
-  id          Int          @id @default(autoincrement())
-  name        String       @unique
-  price       Int
-  //удалить потом
-  avgRating   Int          @default(0)
-  description String       @default("")
-  img         String
-  typeId      Int
-  brandId     Int
-  ratings     Rating[]
-  deviceInfo  DeviceInfo[]
-  type        Type         @relation(fields: [typeId], references: [id])
-  brand       Brand        @relation(fields: [brandId], references: [id])
+  id              Int              @id @default(autoincrement())
+  name            String           @unique
+  price           Int
+  avgRating       Int              @default(0)
+  description     String           @default("")
+  img             String
+  typeId          Int
+  brandId         Int
+  ratings         Rating[]
+  deviceInfo      DeviceInfo[]
+  type            Type             @relation(fields: [typeId], references: [id])
+  brand           Brand            @relation(fields: [brandId], references: [id])
+  purchaseDevices PurchaseDevice[]
 }
 
 model Type {
@@ -56,6 +57,24 @@ model Rating {
   deviceId Int
   user     User   @relation(fields: [userId], references: [id])
   device   Device @relation(fields: [deviceId], references: [id])
+}
+
+model Purchase {
+  id              Int              @id @default(autoincrement())
+  date            DateTime
+  userId          Int
+  user            User             @relation(fields: [userId], references: [id])
+  purchaseDevices PurchaseDevice[]
+}
+
+model PurchaseDevice {
+  id         Int      @id @default(autoincrement())
+  purchaseId Int
+  deviceId   Int
+  purchase   Purchase @relation(fields: [purchaseId], references: [id])
+  device     Device   @relation(fields: [deviceId], references: [id])
+
+  @@unique([purchaseId, deviceId])
 }
 
 model DeviceInfo {

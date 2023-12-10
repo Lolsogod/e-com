@@ -1,10 +1,12 @@
 import { RootRoute, Route, Router } from "@tanstack/react-router";
 import Layout from "@/components/Layout";
 import Main from "@/components/pages/Main";
-import { Auth } from "@/components/pages/Auth";
 import TempAdmin from "@/components/pages/TempAdmin";
 import DevicePage from "@/components/pages/DevicePage";
 import NotFound from "@/components/pages/NotFound";
+import PurchasePage from "@/components/pages/PurchasePage";
+import RegisterPage from "@/components/pages/RegisterPage";
+import LoginPage from "@/components/pages/LoginPage";
 
 const rootRoute = new RootRoute({
   component: Layout,
@@ -20,10 +22,20 @@ const productRoute = new Route({
   path: 'products/$deviceId',
   component: DevicePage,
 })
-const authRoute = new Route({
+const purchasesRoute = new Route({
   getParentRoute: () => rootRoute,
-  path: '/auth',
-  component: Auth,
+  path: 'purchases/$purchaseId',
+  component: PurchasePage,
+})
+const registerRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/register',
+  component: RegisterPage,
+})
+const loginRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/login',
+  component: LoginPage,
 })
 const tempAdminRoute = new Route({
   getParentRoute: () => rootRoute,
@@ -35,14 +47,11 @@ const notFoundRoute = new Route({
   path: '*',
   component: NotFound
 })
-const routeTree = rootRoute.addChildren([indexRoute, authRoute, tempAdminRoute, productRoute, notFoundRoute])
+const routeTree = rootRoute.addChildren([indexRoute, registerRoute,loginRoute, tempAdminRoute, productRoute, notFoundRoute, purchasesRoute])
 
 
 
-export const router = new Router({
-  routeTree,
-  
-})
+export const router = new Router({routeTree})
 
 declare module '@tanstack/react-router' {
   interface Register {

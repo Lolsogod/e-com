@@ -25,6 +25,7 @@ export const userRouter = router({
     )
     .mutation(async ({ input }) => {
       const { email, password } = input;
+      console.log(email, password);
       //TODO:надо ли? + разгрузить
       const candidate = await prisma.user.findUnique({
         where: { email },
@@ -66,4 +67,46 @@ export const userRouter = router({
   checkAuth: protectedProcedure.query(async ({ ctx }) => {
     return ctx.user;
   }),
+  purchase: protectedProcedure
+    .input(z.object({ ids: z.array(z.number()) }))
+    .mutation(async ({ ctx, input }) => {
+      const { ids } = input;
+      const newPurchase = await prisma.purchase.create({
+        data: {
+          date: new Date(),
+          userId: ctx.user.id,
+        },
+      });
+      const purchaseDeviceRecords = ids.map(deviceId => {
+        return {
+          deviceId: deviceId,
+          purchaseId: newPurchase.id,
+        };
+      });
+      await prisma.purchaseDevice.createMany({
+        data: purchaseDeviceRecords,
+      });
+      console.log('Payment created successfully');
+      return newPurchase
+    }),
+    getOnePurchase: protectedProcedure
+      .input(z.object({ purchaseId: z.number() }))  
+      .query(async ({ ctx, input }) => {
+        return await prisma.purchase.findUnique({
+          where: {
+            id: input.purchaseId
+          },
+          include: {
+            purchaseDevices: {
+              include: {
+                device: {
+                  include: {
+                    brand: true
+                  }
+                }
+              }
+            }
+          }
+        })
+      })
 });

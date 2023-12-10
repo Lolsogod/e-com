@@ -16,7 +16,7 @@ const Nav = () => {
         </Link>
         <div>
           <NavigationMenuItem className="group inline-flex">
-            <Link className={navigationMenuTriggerStyle()} to="/auth">
+            <Link className={navigationMenuTriggerStyle()} to="/login">
               Войти
             </Link>
           </NavigationMenuItem>
