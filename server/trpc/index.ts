@@ -24,7 +24,6 @@ type Context = Awaited<ReturnType<typeof createContext>>;
 
 const t = initTRPC.context<Context>().create();
 const isAuthed = t.middleware((opts) => {
-  console.log("checking")
   const { ctx } = opts;
   if (!ctx.user) {
     throw new TRPCError({ code: 'UNAUTHORIZED' });
@@ -35,7 +34,6 @@ const isAuthed = t.middleware((opts) => {
     },
   });
 });
-
 export const protectedProcedure = t.procedure.use(isAuthed);
 export const middleware = t.middleware;
 export const router = t.router;

@@ -51,6 +51,9 @@ const Nav = () => {
                   Выйти
                 </button>
               </NavigationMenuItem>
+              <NavigationMenuItem className="group inline-flex">
+                <Link className={navigationMenuTriggerStyle()} to="/profile">Профиль</Link>
+              </NavigationMenuItem>
             </>
           )}
         </div>

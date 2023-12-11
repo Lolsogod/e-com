@@ -63,9 +63,6 @@ export const userRouter = router({
       const token = getJwt(user);
       return token;
     }),
-  checkAuth: protectedProcedure.query(async ({ ctx }) => {
-    return ctx.user;
-  }),
   purchase: protectedProcedure
     .input(z.object({ ids: z.array(z.number()) }))
     .mutation(async ({ ctx, input }) => {
@@ -94,7 +91,8 @@ export const userRouter = router({
       .query(async ({ ctx, input }) => {
         return await prisma.purchase.findUnique({
           where: {
-            id: input.purchaseId
+            id: input.purchaseId,
+            userId: ctx.user.id
           },
           include: {
             purchaseDevices: {
@@ -109,4 +107,23 @@ export const userRouter = router({
           }
         })
       }),
+      getUserPurchases: protectedProcedure
+      .query(async({ctx})=>{
+        return await prisma.purchase.findMany({
+          where:{
+            userId: ctx.user.id
+          },
+          include:{
+            purchaseDevices: {
+              include: {
+                device: {
+                  include: {
+                    brand: true
+                  }
+                }
+              }
+            }
+          }
+        })
+      })
 });

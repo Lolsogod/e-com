@@ -29,7 +29,7 @@ const PurchasePage = () => {
     return `${day}.${month}.${year}`;
   };
 
-  if (purchase.data)
+  if (!purchase.data) return <h1 className="text-center mt-[40vh]">Нет доступа</h1>;
     return (
       <>
         <div className="container mx-auto mt-8">
