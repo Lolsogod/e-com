@@ -1,27 +1,18 @@
-import { Button } from "./ui/button";
 import type { TrpcClient } from "../types";
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "./ui/table";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
+
+import EditUser from "./EditUser";
 //TODO: and purchase editor... maybe..
 
 const UserList = (props: { trpc: TrpcClient }) => {
   const { trpc } = props;
-  const users = trpc.user.getUsers.useQuery();
+  const users = trpc.user.getAll.useQuery();
   if (users.data)
     return (
       <Table>
@@ -35,27 +26,7 @@ const UserList = (props: { trpc: TrpcClient }) => {
         </TableHeader>
         <TableBody>
           {users.data.map((user) => (
-            <TableRow key={user.id}>
-              <TableCell className="font-medium">{user.id}</TableCell>
-              <TableCell>{user.email}</TableCell>
-              <TableCell>
-                <Select value={user.role}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Выберите роль" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Роли</SelectLabel>
-                      <SelectItem value="USER">USER</SelectItem>
-                      <SelectItem value="ADMIN">ADMIN</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </TableCell>
-              <TableCell>
-                <Button variant={"destructive"}>Х</Button>
-              </TableCell>
-            </TableRow>
+            <EditUser key={user.id} user={user} trpc={trpc} refetch={users.refetch}/>
           ))}
         </TableBody>
       </Table>

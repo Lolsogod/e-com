@@ -4,7 +4,11 @@ import { z } from "zod";
 
 export const brandRouter = router({
   get: procedure.query(async () => {
-    return await prisma.brand.findMany();
+    return await prisma.brand.findMany({
+      orderBy: {
+        id: "asc",
+      }
+    });
   }),
   create: procedure
     .input(z.object({ name: z.string() }))

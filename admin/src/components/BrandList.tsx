@@ -8,23 +8,9 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
-
 import { Input } from "./ui/input";
 import { useState } from "react";
 import EditBrand from "./EditBrand";
-// TODO: Import Brand model from your codebase
-
-const brands = [
-  {
-    id: 1,
-    name: "Brand1",
-  },
-  {
-    id: 2,
-    name: "Brand2",
-  },
-  // Add more brands as needed
-];
 
 const BrandList = (props: { trpc: TrpcClient  }) => {
   const { trpc } = props;

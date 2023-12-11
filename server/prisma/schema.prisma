@@ -55,8 +55,8 @@ model Rating {
   rate     Int
   userId   Int
   deviceId Int
-  user     User   @relation(fields: [userId], references: [id])
-  device   Device @relation(fields: [deviceId], references: [id])
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  device   Device @relation(fields: [deviceId], references: [id], onDelete: Cascade)
 
   @@unique([userId, deviceId])
 }
@@ -65,7 +65,7 @@ model Purchase {
   id              Int              @id @default(autoincrement())
   date            DateTime
   userId          Int
-  user            User             @relation(fields: [userId], references: [id])
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   purchaseDevices PurchaseDevice[]
 }
 
@@ -73,8 +73,8 @@ model PurchaseDevice {
   id         Int      @id @default(autoincrement())
   purchaseId Int
   deviceId   Int
-  purchase   Purchase @relation(fields: [purchaseId], references: [id])
-  device     Device   @relation(fields: [deviceId], references: [id])
+  purchase   Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  device     Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
 }
 
 model DeviceInfo {

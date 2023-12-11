@@ -40,7 +40,7 @@ const loginRoute = new Route({
 });
 const tempAdminRoute = new Route({
   getParentRoute: () => rootRoute,
-  path: "/t-admin",
+  path: "/admin",
   component: AdminPage,
 });
 const profielRoute = new Route({

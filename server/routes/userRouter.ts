@@ -125,10 +125,14 @@ export const userRouter = router({
     });
   }),
   //админ штуки
-  getUsers: procedure.query(async () => {
-    return await prisma.user.findMany();
+  getAll: procedure.query(async () => {
+    return await prisma.user.findMany({
+      orderBy: {
+        id: "asc",
+      }
+    });
   }),
-  deleteUser: protectedProcedure
+  delete: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       return await prisma.user.delete({
