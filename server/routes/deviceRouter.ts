@@ -1,6 +1,8 @@
 import { router, procedure, protectedProcedure } from "../trpc";
 import prisma from "../prisma/client";
 import { z } from "zod";
+import { logger } from "../logger";
+import { TRPCError } from "@trpc/server";
 
 //TODO: img as file? filters pagination, optionals
 export const deviceRouter = router({
@@ -44,6 +46,11 @@ export const deviceRouter = router({
     .mutation(async ({ input }) => {
       return await prisma.device.create({
         data: input,
+      }).then((device) => {
+        logger.info(`device ${device.id} created`);
+        return device;
+      }).catch((err) => {
+        logger.error(err);
       });
     }),
   rate: protectedProcedure
@@ -60,6 +67,8 @@ export const deviceRouter = router({
           data: {
             rate: input.rating,
           },
+        }).then(() => {
+          logger.info(`user ${ctx.user.id} updatet rating on device ${input.id} to ${input.rating}★`);
         })
         .catch(async () => {
           await prisma.purchaseDevice.findFirstOrThrow({
@@ -76,6 +85,8 @@ export const deviceRouter = router({
               deviceId: input.id,
               rate: input.rating,
             },
+          }).then(() => {
+            logger.info(`user ${ctx.user.id} rated device ${input.id} a ${input.rating}★`);
           });
         });
     }),
@@ -110,6 +121,8 @@ export const deviceRouter = router({
         where: {
           id: input.id,
         },
+      }).then(() => {
+        logger.info(`device ${input.id} was deleted`);
       });
     }),
   update: protectedProcedure
@@ -130,6 +143,9 @@ export const deviceRouter = router({
           id: input.id,
         },
         data: input,
+      }).then((device) => {
+        logger.info(`device ${device.id} updated successfully`);
+        return device;
       });
     }),
 });

@@ -2,6 +2,7 @@ import { User } from "@prisma/client";
 import { TRPCError, initTRPC } from "@trpc/server";
 import * as trpcExpress from "@trpc/server/adapters/express";
 import { verify } from "jsonwebtoken";
+import { logger } from "../logger";
 
 export async function createContext({
   req,
@@ -28,6 +29,7 @@ const t = initTRPC.context<Context>().create();
 const isAuthed = t.middleware((opts) => {
   const { ctx } = opts;
   if (!ctx.user) {
+    logger.error("Authorization failed");
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return opts.next({
