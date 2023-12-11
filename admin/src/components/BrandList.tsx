@@ -10,6 +10,8 @@ import {
 } from "./ui/table";
 
 import { Input } from "./ui/input";
+import { useState } from "react";
+import EditBrand from "./EditBrand";
 // TODO: Import Brand model from your codebase
 
 const brands = [
@@ -27,6 +29,17 @@ const brands = [
 const BrandList = (props: { trpc: TrpcClient  }) => {
   const { trpc } = props;
   const brands = trpc.brand.get.useQuery();
+  const brandAdder = trpc.brand.create.useMutation();
+
+  const [name, setName] = useState("");
+
+  const handleAddBrand = async () => {
+    brandAdder.mutateAsync({ name })
+    .then(() => {
+      brands.refetch();
+      setName("");
+    });
+  }
   if (brands.data)
   return (
     <Table>
@@ -40,25 +53,14 @@ const BrandList = (props: { trpc: TrpcClient  }) => {
       </TableHeader>
       <TableBody>
         {brands.data.map((brand) => (
-          <TableRow key={brand.id}>
-            <TableCell className="font-medium">{brand.id}</TableCell>
-            <TableCell><Input value={brand.name}/></TableCell>
-            <TableCell>
-              <Button variant={"destructive"}>Х</Button>
-            </TableCell>
-            <TableCell>
-              <Button >✓</Button>
-            </TableCell>
-          </TableRow>
+          <EditBrand key={brand.id} brand={brand} trpc={trpc} refetch={brands.refetch}/>
         ))}
         <TableRow className="bg-green-50 hover:bg-green-100">
             <TableCell className="font-medium">NEW</TableCell>
-            <TableCell><Input /></TableCell>
+            <TableCell><Input value={name} onChange={(e) => setName(e.target.value)} /></TableCell>
+            <TableCell></TableCell>
             <TableCell>
-              
-            </TableCell>
-            <TableCell>
-              <Button className="bg-green-700 hover:bg-green-600" >+</Button>
+              <Button className="bg-green-700 hover:bg-green-600" onClick={handleAddBrand}>+</Button>
             </TableCell>
           </TableRow>
       </TableBody>
