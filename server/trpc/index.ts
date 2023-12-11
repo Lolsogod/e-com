@@ -5,10 +5,12 @@ import { verify } from "jsonwebtoken";
 
 export async function createContext({
   req,
-  res,
 }: trpcExpress.CreateExpressContextOptions) {
   async function getUserFromHeader() {
-    if (req.headers.authorization && req.headers.authorization.split(" ").length > 1) {
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.split(" ").length > 1
+    ) {
       const user = await verify(
         req.headers.authorization.split(" ")[1],
         process.env.SECRET || "123"
@@ -18,7 +20,7 @@ export async function createContext({
     return null;
   }
   const user = await getUserFromHeader();
-  return {user};
+  return { user };
 }
 type Context = Awaited<ReturnType<typeof createContext>>;
 
@@ -26,7 +28,7 @@ const t = initTRPC.context<Context>().create();
 const isAuthed = t.middleware((opts) => {
   const { ctx } = opts;
   if (!ctx.user) {
-    throw new TRPCError({ code: 'UNAUTHORIZED' });
+    throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return opts.next({
     ctx: {

@@ -1,10 +1,13 @@
+import AdminPannel from "remoteApp/Admin";
+
+
 const TempAdmin = () => {
   return (
     <>
-    <h1>временная админка (плохая)</h1>
-
+      <h1>админка</h1>
+      <AdminPannel/>
     </>
-  )
-}
+  );
+};
 
-export default TempAdmin
+export default TempAdmin;

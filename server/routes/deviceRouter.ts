@@ -1,7 +1,7 @@
 import { router, procedure, protectedProcedure } from "../trpc";
 import prisma from "../prisma/client";
 import { z } from "zod";
-import { TRPCError } from "@trpc/server";
+
 //TODO: img as file? filters pagination, optionals
 export const deviceRouter = router({
   get: procedure.query(async () => {
