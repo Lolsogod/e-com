@@ -33,8 +33,8 @@ const BrandList = (props: { trpc: TrpcClient  }) => {
         <TableRow>
           <TableHead className="w-[100px]">Id</TableHead>
           <TableHead>Название</TableHead>
-          <TableHead>Удалить</TableHead>
-          <TableHead>Сохранить</TableHead>
+          <TableHead className="w-[100px]">Удалить</TableHead>
+          <TableHead className="w-[100px]">Сохранить</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -46,7 +46,7 @@ const BrandList = (props: { trpc: TrpcClient  }) => {
             <TableCell><Input value={name} onChange={(e) => setName(e.target.value)} /></TableCell>
             <TableCell></TableCell>
             <TableCell>
-              <Button className="bg-green-700 hover:bg-green-600" onClick={handleAddBrand}>+</Button>
+              <Button className="bg-green-700 hover:bg-green-600 w-[45px]" onClick={handleAddBrand}>+</Button>
             </TableCell>
           </TableRow>
       </TableBody>

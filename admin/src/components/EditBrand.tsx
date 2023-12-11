@@ -1,4 +1,4 @@
-import { TrpcClient } from "@/types";
+import { RouterOutputs, TrpcClient } from "@/types";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { TableCell, TableRow } from "./ui/table";
@@ -6,7 +6,7 @@ import { useState } from "react";
 
 const EditBrand = (props: {
   trpc: TrpcClient;
-  brand: { id: number; name: string };
+  brand: RouterOutputs["brand"]["get"][0];
   refetch: () => void;
 }) => {
   const { trpc, brand, refetch } = props;
@@ -31,12 +31,12 @@ const EditBrand = (props: {
         <Input value={name} onChange={(e) => setName(e.target.value)} />
       </TableCell>
       <TableCell>
-        <Button variant={"destructive"} onClick={handleDeleteBrand}>
+        <Button variant={"destructive"} onClick={handleDeleteBrand} className="w-[45px]">
           Х
         </Button>
       </TableCell>
       <TableCell>
-        <Button onClick={handleUpdateBrand}>✓</Button>
+        <Button onClick={handleUpdateBrand} className="w-[45px]">✓</Button>
       </TableCell>
     </TableRow>
   );

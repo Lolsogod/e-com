@@ -18,147 +18,129 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Input } from "./ui/input";
-//TODO: real data, device info maybe....
-const devices2 = [
-  {
-    id: 1,
-    name: "Device1",
-    price: 500,
-    avgRating: 4,
-    description: "Description for Device1",
-    img: "device1.jpg",
-    typeId: 1,
-    brandId: 1,
-    brand:{
-      id: 1,
-      name: "Brand1",
-    }
-  },
-  {
-    id: 1,
-    name: "Device1",
-    price: 500,
-    avgRating: 4,
-    description: "Description for Device1",
-    img: "device1.jpg",
-    typeId: 1,
-    brandId: 1,
-    brand:{
-      id: 1,
-      name: "Brand1",
-    }
-  },
-  {
-    id: 1,
-    name: "Device1",
-    price: 500,
-    avgRating: 4,
-    description: "Description for Device1",
-    img: "device1.jpg",
-    typeId: 1,
-    brandId: 1,
-    brand:{
-      id: 1,
-      name: "Brand1",
-    }
-  },
-  {
-    id: 1,
-    name: "Device1",
-    price: 500,
-    avgRating: 4,
-    description: "Description for Device1",
-    img: "device1.jpg",
-    typeId: 1,
-    brandId: 1,
-    brand:{
-      id: 1,
-      name: "Brand1",
-    }
-  },
-  // Add more devices as needed
-];
-
-const DeviceList = (props: { trpc: TrpcClient  }) => {
+import EditDevice from "./EditDevice";
+import { useState } from "react";
+//TODO:  device info maybe....
+const DeviceList = (props: { trpc: TrpcClient }) => {
   const { trpc } = props;
   const devices = trpc.device.get.useQuery();
+  const brands = trpc.brand.get.useQuery();
+  const deviceAdder = trpc.device.create.useMutation();
+
+  const [name, setName] = useState("");
+  const [brandId, setBrandId] = useState<number>();
+  const [img, setImg] = useState("");
+  const [price, setPrice] = useState(0);
+  const [description, setDescription] = useState("");
+
+  const handleAddDevice = async () => {
+    deviceAdder
+      .mutateAsync({
+        brandId: Number(brandId),
+        name,
+        img,
+        price,
+        typeId: 1,
+        description,
+      })
+      .then(() => {
+        devices.refetch();
+        setName("");
+        setBrandId(0);
+        setImg("");
+        setPrice(0);
+        setDescription("");
+      });
+  };
   if (devices.data)
-  return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-[100px]">Id</TableHead>
-          <TableHead>Брэнд</TableHead>
-          <TableHead>Модель</TableHead>
-          <TableHead>Цена</TableHead>
-          <TableHead>Описание</TableHead>
-          <TableHead>Картинка</TableHead>
-          <TableHead>Удалить</TableHead>
-          <TableHead>Сохранить</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {devices.data.map((device) => (
-          <TableRow key={device.id}>
-            <TableCell className="font-medium">{device.id}</TableCell>
-            <TableCell>
-              <Select value={String(device.brandId)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select brand" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Брэнды</SelectLabel>
-                    {/* Replace with actual brand data */}
-                    <SelectItem value={String(device.brandId)}>{device.brand.name}</SelectItem>
-                    {/* Add more brands as needed */}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </TableCell>
-            <TableCell><Input value={device.name}/></TableCell>
-            <TableCell><Input value={device.price}/></TableCell>
-            <TableCell><Input value={device.description}/></TableCell>
-            <TableCell><Input value={device.img}/></TableCell>
-            <TableCell>
-              <Button variant={"destructive"}>Х</Button>
-            </TableCell>
-            <TableCell>
-              <Button >✓</Button>
-            </TableCell>
+    return (
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[100px]">Id</TableHead>
+            <TableHead>Брэнд</TableHead>
+            <TableHead>Модель</TableHead>
+            <TableHead>Цена</TableHead>
+            <TableHead>Описание</TableHead>
+            <TableHead>Картинка</TableHead>
+            <TableHead className="w-[100px]">Удалить</TableHead>
+            <TableHead className="w-[100px]">Сохранить</TableHead>
           </TableRow>
-        ))}
-        <TableRow className="bg-green-50 hover:bg-green-100">
+        </TableHeader>
+        <TableBody>
+          {devices.data.map((device) => (
+            <EditDevice
+              key={device.id}
+              device={device}
+              brands={brands.data || []}
+              trpc={trpc}
+              refetch={devices.refetch}
+            />
+          ))}
+          <TableRow className="bg-green-50 hover:bg-green-100">
             <TableCell className="font-medium">NEW</TableCell>
             <TableCell>
-              <Select >
+              <Select
+                value={String(brandId)}
+                onValueChange={(e) => setBrandId(Number(e))}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select brand" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Брэнды</SelectLabel>
-                    {/* Replace with actual brand data */}
-                    <SelectItem value="id">Brand1</SelectItem>
-                    {/* Add more brands as needed */}
+                    {brands.data?.map((brand) => (
+                      <SelectItem key={brand.id} value={String(brand.id)}>
+                        {brand.name}
+                      </SelectItem>
+                    ))}
                   </SelectGroup>
                 </SelectContent>
               </Select>
             </TableCell>
-            <TableCell><Input /></TableCell>
-            <TableCell><Input /></TableCell>
-            <TableCell><Input /></TableCell>
-            <TableCell><Input /></TableCell>
             <TableCell>
-              
+              <Input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Модель"
+              />
             </TableCell>
             <TableCell>
-              <Button className="bg-green-700 hover:bg-green-600" >+</Button>
+              <Input
+                type="number"
+                value={price}
+                onChange={(e) => setPrice(Number(e.target.value))}
+                placeholder="Цена"
+              />
+            </TableCell>
+            <TableCell>
+              <Input
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Введите описание"
+              />
+            </TableCell>
+            <TableCell>
+              <Input
+                value={img}
+                onChange={(e) => setImg(e.target.value)}
+                placeholder="Введите url картинки"
+              />
+            </TableCell>
+            <TableCell></TableCell>
+            <TableCell>
+              <Button
+                className="bg-green-700 hover:bg-green-600 w-[45px]"
+                onClick={handleAddDevice}
+              >
+                +
+              </Button>
             </TableCell>
           </TableRow>
-      </TableBody>
-    </Table>
-  );
+        </TableBody>
+      </Table>
+    );
 };
 
 export default DeviceList;

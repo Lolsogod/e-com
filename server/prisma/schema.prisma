@@ -82,7 +82,7 @@ model DeviceInfo {
   title       String
   description String
   deviceId    Int
-  device      Device @relation(fields: [deviceId], references: [id])
+  device      Device @relation(fields: [deviceId], references: [id], onDelete: Cascade)
 }
 
 model TypeBrand {

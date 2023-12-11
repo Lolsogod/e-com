@@ -21,7 +21,7 @@ const UserList = (props: { trpc: TrpcClient }) => {
             <TableHead className="w-[100px]">Id</TableHead>
             <TableHead>Email</TableHead>
             <TableHead>Роль</TableHead>
-            <TableHead>Удалить</TableHead>
+            <TableHead className="w-[100px]">Удалить</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

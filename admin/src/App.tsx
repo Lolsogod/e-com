@@ -1,4 +1,4 @@
-import './App.css'
+//import './App.css'
 import BrandList from './components/BrandList'
 import DeviceList from './components/DeviceList'
 import UserList from './components/UserList'

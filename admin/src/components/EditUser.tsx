@@ -1,4 +1,4 @@
-import { TrpcClient } from "@/types";
+import { RouterOutputs, TrpcClient } from "@/types";
 import { Button } from "./ui/button";
 import { TableCell, TableRow } from "./ui/table";
 import {
@@ -13,7 +13,7 @@ import {
 
 const EditUser = (props: {
   trpc: TrpcClient;
-  user: { id: number; email: string; role: string };
+  user: RouterOutputs["user"]["getAll"][0];
   refetch: () => void;
 }) => {
   const { trpc, user, refetch } = props;
@@ -51,7 +51,7 @@ const EditUser = (props: {
         </Select>
       </TableCell>
       <TableCell>
-        <Button variant={"destructive"} onClick={handleDeleteUser}>
+        <Button variant={"destructive"} onClick={handleDeleteUser}className="w-[45px]"> 
           Х
         </Button>
       </TableCell>

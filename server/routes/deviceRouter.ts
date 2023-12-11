@@ -11,6 +11,9 @@ export const deviceRouter = router({
         deviceInfo: true,
         ratings: true,
       },
+      orderBy: {
+        id: "asc",
+      }
     });
   }),
   getOne: procedure
@@ -35,6 +38,7 @@ export const deviceRouter = router({
         img: z.string(),
         typeId: z.number(),
         brandId: z.number(),
+        description: z.string().optional(),
       })
     )
     .mutation(async ({ input }) => {
@@ -45,33 +49,35 @@ export const deviceRouter = router({
   rate: protectedProcedure
     .input(z.object({ id: z.number(), rating: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      return await prisma.rating.update({
-        where: {
-          userId_deviceId: {
-            userId: ctx.user.id,
-            deviceId: input.id,
-          }
-        },
-        data: {
-          rate: input.rating
-        }
-      }).catch(async() => {
-        await prisma.purchaseDevice.findFirstOrThrow({
+      return await prisma.rating
+        .update({
           where: {
-            deviceId: input.id,
-            purchase: {
+            userId_deviceId: {
               userId: ctx.user.id,
+              deviceId: input.id,
             },
           },
-        });
-        return await prisma.rating.create({
           data: {
-            userId: ctx.user.id,
-            deviceId: input.id,
             rate: input.rating,
           },
+        })
+        .catch(async () => {
+          await prisma.purchaseDevice.findFirstOrThrow({
+            where: {
+              deviceId: input.id,
+              purchase: {
+                userId: ctx.user.id,
+              },
+            },
+          });
+          return await prisma.rating.create({
+            data: {
+              userId: ctx.user.id,
+              deviceId: input.id,
+              rate: input.rating,
+            },
+          });
         });
-      })
     }),
   rateable: protectedProcedure
     .input(z.object({ id: z.number() }))
@@ -87,14 +93,43 @@ export const deviceRouter = router({
     }),
   userRating: protectedProcedure
     .input(z.object({ id: z.number() }))
-    .query(async ({ ctx,input }) => {
+    .query(async ({ ctx, input }) => {
       return await prisma.rating.findUnique({
         where: {
           userId_deviceId: {
             userId: ctx.user.id,
             deviceId: input.id,
-          }
+          },
         },
+      });
+    }),
+  delete: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      return await prisma.device.delete({
+        where: {
+          id: input.id,
+        },
+      });
+    }),
+  update: protectedProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        name: z.string(),
+        price: z.number(),
+        img: z.string(),
+        typeId: z.number(),
+        brandId: z.number(),
+        description: z.string().optional(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      return await prisma.device.update({
+        where: {
+          id: input.id,
+        },
+        data: input,
       });
     }),
 });
