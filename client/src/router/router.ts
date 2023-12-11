@@ -1,7 +1,7 @@
 import { RootRoute, Route, Router } from "@tanstack/react-router";
 import Layout from "@/components/Layout";
 import Main from "@/components/pages/Main";
-import TempAdmin from "@/components/pages/TempAdmin";
+import AdminPage from "@/components/pages/AdminPage";
 import DevicePage from "@/components/pages/DevicePage";
 import NotFound from "@/components/pages/NotFound";
 import PurchasePage from "@/components/pages/PurchasePage";
@@ -41,7 +41,7 @@ const loginRoute = new Route({
 const tempAdminRoute = new Route({
   getParentRoute: () => rootRoute,
   path: "/t-admin",
-  component: TempAdmin,
+  component: AdminPage,
 });
 const profielRoute = new Route({
   getParentRoute: () => rootRoute,

@@ -10,3 +10,4 @@ export type RouterInputs = inferRouterInputs<AppRouter>;
 export type RouterOutputs = inferRouterOutputs<AppRouter>;
 
 export const trpc = createTRPCReact<AppRouter>();
+export type TrpcClient = typeof trpc;

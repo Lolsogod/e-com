@@ -11,7 +11,7 @@ import { useAuth } from "@/store/useAuth";
 const Nav = () => {
   const { info, token, logout } = useAuth();
   return (
-    <NavigationMenu className="">
+    <NavigationMenu className="sticky top-0 bg-white">
       <NavigationMenuList className="flex justify-between p-4 w-screen">
         <Link to="/">
           <h1 className="text-2xl font-bold  self-start">TrueGadget</h1>

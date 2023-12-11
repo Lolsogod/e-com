@@ -1,4 +1,5 @@
 import { Button } from "./ui/button";
+import type { TrpcClient } from "../types";
 import {
   Table,
   TableBody,
@@ -18,7 +19,7 @@ import {
 } from "./ui/select";
 import { Input } from "./ui/input";
 //TODO: real data, device info maybe....
-const devices = [
+const devices2 = [
   {
     id: 1,
     name: "Device1",
@@ -78,7 +79,10 @@ const devices = [
   // Add more devices as needed
 ];
 
-const DeviceList = () => {
+const DeviceList = (props: { trpc: TrpcClient  }) => {
+  const { trpc } = props;
+  const devices = trpc.device.get.useQuery();
+  if (devices.data)
   return (
     <Table>
       <TableHeader>
@@ -94,7 +98,7 @@ const DeviceList = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {devices.map((device) => (
+        {devices.data.map((device) => (
           <TableRow key={device.id}>
             <TableCell className="font-medium">{device.id}</TableCell>
             <TableCell>

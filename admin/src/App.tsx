@@ -2,29 +2,31 @@ import './App.css'
 import BrandList from './components/BrandList'
 import DeviceList from './components/DeviceList'
 import UserList from './components/UserList'
-
+import type { TrpcClient } from "./types";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "./components/ui/tabs"
-function App(props:{token:string}) {
+
+function App(props:{token:string, trpc: TrpcClient}) {
+  const {trpc} = props
   return (
     <Tabs defaultValue="account" >
-      <TabsList className="grid w-screen grid-cols-3">
+      <TabsList className="grid w-full grid-cols-3">
         <TabsTrigger value="users">Пользователи</TabsTrigger>
         <TabsTrigger value="devices">Устройства</TabsTrigger>
         <TabsTrigger value="brands">Брэнды</TabsTrigger>
       </TabsList>
       <TabsContent value="users">
-       <UserList/>
+       <UserList trpc={trpc}/>
       </TabsContent>
       <TabsContent value="devices">
-        <DeviceList/>
+        <DeviceList trpc={trpc}/>
       </TabsContent>
       <TabsContent value="brands">
-        <BrandList/>
+        <BrandList trpc={trpc}/>
       </TabsContent>
     </Tabs>
   )

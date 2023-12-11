@@ -1,4 +1,5 @@
 import { Button } from "./ui/button";
+import type { TrpcClient } from "../types";
 import {
   Table,
   TableBody,
@@ -23,7 +24,10 @@ const brands = [
   // Add more brands as needed
 ];
 
-const BrandList = () => {
+const BrandList = (props: { trpc: TrpcClient  }) => {
+  const { trpc } = props;
+  const brands = trpc.brand.get.useQuery();
+  if (brands.data)
   return (
     <Table>
       <TableHeader>
@@ -35,7 +39,7 @@ const BrandList = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {brands.map((brand) => (
+        {brands.data.map((brand) => (
           <TableRow key={brand.id}>
             <TableCell className="font-medium">{brand.id}</TableCell>
             <TableCell><Input value={brand.name}/></TableCell>
