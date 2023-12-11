@@ -7,8 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// schema.prisma
-
 model User {
   id        Int        @id @default(autoincrement())
   email     String     @unique
@@ -22,9 +20,11 @@ model Device {
   id              Int              @id @default(autoincrement())
   name            String           @unique
   price           Int
+  //unused
   avgRating       Int              @default(0)
   description     String           @default("")
   img             String
+  //unused
   typeId          Int
   brandId         Int
   ratings         Rating[]

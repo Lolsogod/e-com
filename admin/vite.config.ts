@@ -12,7 +12,12 @@ export default defineConfig({
       exposes: {
         "./Admin": "./src/App.tsx",
       },
-      shared: ["react", "react-dom"],
+      shared: [
+        "lucide-react",
+        "react",
+        "react-dom",
+        "tailwindcss-animate"
+      ]
     }),
   ],
   build: {

@@ -11,7 +11,12 @@ export default defineConfig({
       remotes: {
         remoteApp: 'http://localhost:5001/assets/remoteEntry.js',
       },
-      shared: ["react", "react-dom"]
+      shared: [
+        "lucide-react",
+        "react",
+        "react-dom",
+        "tailwindcss-animate"
+      ]
     })
   ],
   build: {

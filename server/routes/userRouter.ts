@@ -25,7 +25,6 @@ export const userRouter = router({
     )
     .mutation(async ({ input }) => {
       const { email, password } = input;
-      //TODO:надо ли? + разгрузить
       const candidate = await prisma.user.findUnique({
         where: { email },
       });
@@ -73,57 +72,81 @@ export const userRouter = router({
           userId: ctx.user.id,
         },
       });
-      const purchaseDeviceRecords = ids.map(deviceId => {
+      const purchaseDeviceRecords = ids.map((deviceId) => {
         return {
           deviceId: deviceId,
           purchaseId: newPurchase.id,
         };
       });
-      console.log(purchaseDeviceRecords)
+      console.log(purchaseDeviceRecords);
       await prisma.purchaseDevice.createMany({
         data: purchaseDeviceRecords,
       });
-      console.log('Payment created successfully');
-      return newPurchase
+      console.log("Payment created successfully");
+      return newPurchase;
     }),
-    getOnePurchase: protectedProcedure
-      .input(z.object({ purchaseId: z.number() }))  
-      .query(async ({ ctx, input }) => {
-        return await prisma.purchase.findUnique({
-          where: {
-            id: input.purchaseId,
-            userId: ctx.user.id
+  getOnePurchase: protectedProcedure
+    .input(z.object({ purchaseId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      return await prisma.purchase.findUnique({
+        where: {
+          id: input.purchaseId,
+          userId: ctx.user.id,
+        },
+        include: {
+          purchaseDevices: {
+            include: {
+              device: {
+                include: {
+                  brand: true,
+                },
+              },
+            },
           },
+        },
+      });
+    }),
+  getUserPurchases: protectedProcedure.query(async ({ ctx }) => {
+    return await prisma.purchase.findMany({
+      where: {
+        userId: ctx.user.id,
+      },
+      include: {
+        purchaseDevices: {
           include: {
-            purchaseDevices: {
+            device: {
               include: {
-                device: {
-                  include: {
-                    brand: true
-                  }
-                }
-              }
-            }
-          }
-        })
-      }),
-      getUserPurchases: protectedProcedure
-      .query(async({ctx})=>{
-        return await prisma.purchase.findMany({
-          where:{
-            userId: ctx.user.id
+                brand: true,
+              },
+            },
           },
-          include:{
-            purchaseDevices: {
-              include: {
-                device: {
-                  include: {
-                    brand: true
-                  }
-                }
-              }
-            }
-          }
-        })
-      })
+        },
+      },
+    });
+  }),
+  //админ штуки
+  getUsers: procedure.query(async () => {
+    return await prisma.user.findMany();
+  }),
+  deleteUser: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => {
+      return await prisma.user.delete({
+        where: {
+          id: input.id,
+        },
+      });
+    }),
+  changeRole: protectedProcedure
+    .input(z.object({ id: z.number(), role: z.enum(["ADMIN", "USER"]) }))
+    .mutation(async ({ input }) => {
+      return await prisma.user.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          role: input.role,
+        },
+      });
+    }),
 });
