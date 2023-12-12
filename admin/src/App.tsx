@@ -10,7 +10,7 @@ import {
   TabsTrigger,
 } from "./components/ui/tabs"
 
-function App(props:{token:string, trpc: TrpcClient}) {
+function App(props:{ trpc: TrpcClient}) {
   const {trpc} = props
   return (
     <Tabs defaultValue="account" >

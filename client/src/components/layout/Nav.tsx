@@ -1,3 +1,4 @@
+
 import { Link } from "@tanstack/react-router";
 import {
   NavigationMenu,
@@ -8,7 +9,6 @@ import {
 import Cart from "../widgets/Cart";
 import { useAuth } from "@/store/useAuth";
 import { useFlags } from "@/store/useFlags";
-import { Button, buttonVariants } from "../ui/button";
 import { cn } from "@/lib/utils";
 
 const Nav = () => {
@@ -36,23 +36,23 @@ const Nav = () => {
               </NavigationMenuItem>
             </>
           )}
-          {info.role == "ADMIN" && (
-            <>
-              {flags?.ADMIN_PANEL ? (
-                <NavigationMenuItem className="group inline-flex">
-                  <Link to="/admin" className={navigationMenuTriggerStyle()}>
-                    Админ Панель
-                  </Link>
-                </NavigationMenuItem>
-              ) : (
-                <NavigationMenuItem  className={cn("group inline-flex cursor-not-allowed",navigationMenuTriggerStyle())}>
-                  Админ Панель
-                </NavigationMenuItem>
-              )}
-            </>
-          )}
           {token && (
             <>
+              {info.role == "ADMIN" && (
+                <>
+                  {flags?.ADMIN_PANEL ? (
+                    <NavigationMenuItem className="group inline-flex">
+                      <Link to="/admin" className={navigationMenuTriggerStyle()}>
+                        Админ Панель
+                      </Link>
+                    </NavigationMenuItem>
+                  ) : (
+                    <NavigationMenuItem className={cn(navigationMenuTriggerStyle(), "group inline-flex cursor-not-allowed text-gray-400 hover:text-gray-400 select-none")}>
+                      Админ Панель
+                    </NavigationMenuItem>
+                  )}
+                </>
+              )}
               <NavigationMenuItem className="group inline-flex">
                 <Cart />
               </NavigationMenuItem>

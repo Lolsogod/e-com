@@ -1,4 +1,4 @@
-import { RootRoute, Route, Router } from "@tanstack/react-router";
+import { RootRoute, Route, Router, redirect } from "@tanstack/react-router";
 import Layout from "@/components/Layout";
 import Main from "@/components/pages/Main";
 import AdminPage from "@/components/pages/AdminPage";
@@ -8,6 +8,8 @@ import PurchasePage from "@/components/pages/PurchasePage";
 import RegisterPage from "@/components/pages/RegisterPage";
 import LoginPage from "@/components/pages/LoginPage";
 import ProfilePage from "@/components/pages/ProfilePage";
+import { useAuth } from "@/store/useAuth";
+import { useFlags } from "@/store/useFlags";
 
 const rootRoute = new RootRoute({
   component: Layout,
@@ -32,21 +34,51 @@ const registerRoute = new Route({
   getParentRoute: () => rootRoute,
   path: "/register",
   component: RegisterPage,
+  beforeLoad: async () => {
+    if (await useAuth.getState().token) {
+      throw redirect({
+        to: '/'
+      })
+    }
+  }
 });
+
 const loginRoute = new Route({
   getParentRoute: () => rootRoute,
   path: "/login",
   component: LoginPage,
+  beforeLoad: async () => {
+    if (await useAuth.getState().token) {
+      throw redirect({
+        to: '/'
+      })
+    }
+  }
 });
-const tempAdminRoute = new Route({
+
+const adminRoute = new Route({
   getParentRoute: () => rootRoute,
   path: "/admin",
   component: AdminPage,
+  beforeLoad: async () => {
+    if (await useAuth.getState().info.role !== "ADMIN" || await useFlags.getState().flags?.ADMIN_PANEL === false) {
+      throw redirect({
+        to: '/'
+      })
+    }
+  }
 });
 const profielRoute = new Route({
   getParentRoute: () => rootRoute,
   path: "/profile",
   component: ProfilePage,
+  beforeLoad: async () => {
+    if (!await useAuth.getState().token) {
+      throw redirect({
+        to: '/'
+      })
+    }
+  }
 });
 const notFoundRoute = new Route({
   getParentRoute: () => rootRoute,
@@ -57,7 +89,7 @@ const routeTree = rootRoute.addChildren([
   indexRoute,
   registerRoute,
   loginRoute,
-  tempAdminRoute,
+  adminRoute,
   profielRoute,
   productRoute,
   notFoundRoute,

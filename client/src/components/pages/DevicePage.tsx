@@ -8,8 +8,10 @@ const DevicePage = () => {
   const { deviceId } = useParams({ strict: false });
   const device = trpc.device.getOne.useQuery({ id: Number(deviceId) });
   const { token } = useAuth();
-  if (!device.data)
-    return <h1 className="text-center mt-[40vh]">товар не найден</h1>;
+  if (device.isLoading)
+    return <div className="text-center mt-[40vh]">Загрузка...</div>;
+  if (device.error || !device.data)
+    return <h1 className="text-center mt-[40vh]">Товар не найден</h1>;
   else {
     const totalRating =
       device.data?.ratings.reduce((a, b) => a + b.rate, 0) || 0;
@@ -52,8 +54,8 @@ const DevicePage = () => {
               ))}
             </div>
             <div>
-              {token &&<Rate id={device.data.id} device={device}/>}
-              <AddToCartBtn device={device.data} className="my-4"/>
+              {token && <Rate id={device.data.id} device={device} />}
+              <AddToCartBtn device={device.data} className="my-4" />
             </div>
           </div>
         </div>

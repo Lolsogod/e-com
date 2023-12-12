@@ -1,2 +1,3 @@
-import featureFlags from "featureFlags.json"
+//profile?
+//rating
 
