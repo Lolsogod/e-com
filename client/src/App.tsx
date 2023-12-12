@@ -11,10 +11,11 @@ const queryClient = new QueryClient();
 const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
-      url: "http://localhost:5000/trpc",
+      url: process.env.SERVER + "/trpc",
       async headers() {
         return {
-          authorization: "Bearer " + await useAuth.getState().token
+          authorization: "Bearer " + await useAuth.getState().token,
+          "ngrok-skip-browser-warning": "69420",
         };
       },
     }),
