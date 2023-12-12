@@ -16,7 +16,6 @@ type AuthState = {
 
 const parseToken = async (token: string) => {
   const info = await jwtDecode(token);
-  console.log(info);
   return info as UserInfo;
 };
 

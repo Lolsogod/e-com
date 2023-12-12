@@ -3,7 +3,7 @@ import { TRPCError, initTRPC } from "@trpc/server";
 import * as trpcExpress from "@trpc/server/adapters/express";
 import { verify } from "jsonwebtoken";
 import { logger } from "../logger";
-
+import featureFlags from "../featureFlags.json";
 export async function createContext({
   req,
 }: trpcExpress.CreateExpressContextOptions) {
@@ -40,8 +40,8 @@ const isAuthed = t.middleware((opts) => {
 
 const isAdmin = t.middleware((opts) => {
   const { ctx } = opts;
-  if (ctx.user?.role !== "ADMIN") {
-    logger.error("Not authorized user tryed to access admin route");
+  if (ctx.user?.role !== "ADMIN" || !featureFlags.ADMIN_PANEL) {
+    logger.error("Not authorized user tryed to access admin route or admin panel is disabled");
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return opts.next({

@@ -2,9 +2,17 @@ import { router, procedure, protectedProcedure, adminProcedure } from "../trpc";
 import prisma from "../prisma/client";
 import { z } from "zod";
 import { logger } from "../logger";
+import featureFlags from "../featureFlags.json";
 import { TRPCError } from "@trpc/server";
-
 //TODO: img as file? filters pagination, optionals
+const ratingFlagHandler = () => {
+  if (!featureFlags.RATING)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "rating is disabled",
+        });
+}
+
 export const deviceRouter = router({
   get: procedure.query(async () => {
     return await prisma.device.findMany({
@@ -15,7 +23,7 @@ export const deviceRouter = router({
       },
       orderBy: {
         id: "asc",
-      }
+      },
     });
   }),
   getOne: procedure
@@ -44,18 +52,22 @@ export const deviceRouter = router({
       })
     )
     .mutation(async ({ input }) => {
-      return await prisma.device.create({
-        data: input,
-      }).then((device) => {
-        logger.info(`device ${device.id} created`);
-        return device;
-      }).catch((err) => {
-        logger.error(err);
-      });
+      return await prisma.device
+        .create({
+          data: input,
+        })
+        .then((device) => {
+          logger.info(`device ${device.id} created`);
+          return device;
+        })
+        .catch((err) => {
+          logger.error(err);
+        });
     }),
   rate: protectedProcedure
     .input(z.object({ id: z.number(), rating: z.number() }))
     .mutation(async ({ ctx, input }) => {
+      ratingFlagHandler()
       return await prisma.rating
         .update({
           where: {
@@ -67,8 +79,11 @@ export const deviceRouter = router({
           data: {
             rate: input.rating,
           },
-        }).then(() => {
-          logger.info(`user ${ctx.user.id} updatet rating on device ${input.id} to ${input.rating}★`);
+        })
+        .then(() => {
+          logger.info(
+            `user ${ctx.user.id} updatet rating on device ${input.id} to ${input.rating}★`
+          );
         })
         .catch(async () => {
           await prisma.purchaseDevice.findFirstOrThrow({
@@ -79,20 +94,25 @@ export const deviceRouter = router({
               },
             },
           });
-          return await prisma.rating.create({
-            data: {
-              userId: ctx.user.id,
-              deviceId: input.id,
-              rate: input.rating,
-            },
-          }).then(() => {
-            logger.info(`user ${ctx.user.id} rated device ${input.id} a ${input.rating}★`);
-          });
+          return await prisma.rating
+            .create({
+              data: {
+                userId: ctx.user.id,
+                deviceId: input.id,
+                rate: input.rating,
+              },
+            })
+            .then(() => {
+              logger.info(
+                `user ${ctx.user.id} rated device ${input.id} a ${input.rating}★`
+              );
+            });
         });
     }),
   rateable: protectedProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ ctx, input }) => {
+      ratingFlagHandler()
       return await prisma.purchaseDevice.findFirst({
         where: {
           deviceId: input.id,
@@ -105,6 +125,7 @@ export const deviceRouter = router({
   userRating: protectedProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ ctx, input }) => {
+      ratingFlagHandler()
       return await prisma.rating.findUnique({
         where: {
           userId_deviceId: {
@@ -117,13 +138,15 @@ export const deviceRouter = router({
   delete: adminProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
-      return await prisma.device.delete({
-        where: {
-          id: input.id,
-        },
-      }).then(() => {
-        logger.info(`device ${input.id} was deleted`);
-      });
+      return await prisma.device
+        .delete({
+          where: {
+            id: input.id,
+          },
+        })
+        .then(() => {
+          logger.info(`device ${input.id} was deleted`);
+        });
     }),
   update: adminProcedure
     .input(
@@ -138,14 +161,16 @@ export const deviceRouter = router({
       })
     )
     .mutation(async ({ input }) => {
-      return await prisma.device.update({
-        where: {
-          id: input.id,
-        },
-        data: input,
-      }).then((device) => {
-        logger.info(`device ${device.id} updated successfully`);
-        return device;
-      });
+      return await prisma.device
+        .update({
+          where: {
+            id: input.id,
+          },
+          data: input,
+        })
+        .then((device) => {
+          logger.info(`device ${device.id} updated successfully`);
+          return device;
+        });
     }),
 });

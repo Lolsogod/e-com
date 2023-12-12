@@ -3,11 +3,14 @@ import { useParams } from "@tanstack/react-router";
 import AddToCartBtn from "../widgets/AddToCartBtn";
 import Rate from "../widgets/Rate";
 import { useAuth } from "@/store/useAuth";
+import { useFlags } from "@/store/useFlags";
 
 const DevicePage = () => {
   const { deviceId } = useParams({ strict: false });
   const device = trpc.device.getOne.useQuery({ id: Number(deviceId) });
   const { token } = useAuth();
+  const { flags } = useFlags()
+
   if (device.isLoading)
     return <div className="text-center mt-[40vh]">Загрузка...</div>;
   if (device.error || !device.data)
@@ -38,23 +41,27 @@ const DevicePage = () => {
               <p className="text-gray-700 mt-2 text-2xl">
                 {device.data.price} руб.
               </p>
-              <p className="font-bold mt-2">
-                Рейтинг: {avgRating}
-                <span className="text-yellow-600">★</span>
-              </p>
-
-              <h3 className="font-bold">Характеристики:</h3>
-              {device.data.deviceInfo.map((info) => (
-                <p key={info.id}>
-                  <span className="font-semibold decoration-black">
-                    {info.title}
-                  </span>
-                  : {info.description}
-                </p>
-              ))}
+              {flags?.RATING && (
+                <p className="font-bold mt-2">
+                  Рейтинг: {avgRating}
+                  <span className="text-yellow-600">★</span>
+                </p>)}
+              {device.data.deviceInfo.length > 0 && <>
+                <h3 className="font-bold">Характеристики:</h3>
+                {device.data.deviceInfo.map((info) => (
+                  <p key={info.id}>
+                    <span className="font-semibold decoration-black">
+                      {info.title}
+                    </span>
+                    : {info.description}
+                  </p>
+                ))
+                }
+              </>
+              }
             </div>
             <div>
-              {token && <Rate id={device.data.id} device={device} />}
+              {token && flags?.RATING && <Rate id={device.data.id} device={device} />}
               <AddToCartBtn device={device.data} className="my-4" />
             </div>
           </div>

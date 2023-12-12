@@ -1,5 +1,5 @@
 import { trpc } from "@/utils/trpc";
-import { DeviceCard } from "../widgets/DeviceCard";
+import DeviceCard from "../widgets/DeviceCard";
 
 const Main = () => {
   const devices = trpc.device.get.useQuery();

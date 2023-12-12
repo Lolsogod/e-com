@@ -12,9 +12,8 @@ import AddToCartBtn from "./AddToCartBtn";
 
 type Device = RouterOutputs["device"]["getOne"];
 
-export function DeviceCard(props: { device: Device }) {
+const DeviceCard = (props: { device: Device }) => {
   const { device } = props;
- 
   return (
     <Card className="min-w-[350px]">
       <Link to="/products/$deviceId" params={{ deviceId: String(device?.id) }}>
@@ -34,3 +33,4 @@ export function DeviceCard(props: { device: Device }) {
     </Card>
   );
 }
+export default DeviceCard;

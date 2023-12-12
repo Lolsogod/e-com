@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Select,
   SelectContent,
@@ -10,7 +9,7 @@ import {
 } from "@/components/ui/select";
 import { trpc } from "@/utils/trpc";
 import { UseTRPCQueryResult } from "@trpc/react-query/shared";
-import { useEffect } from "react";
+
 
 const Rate = (props: { id: number; device: UseTRPCQueryResult<any, any> }) => {
   const { id, device } = props;
@@ -23,9 +22,6 @@ const Rate = (props: { id: number; device: UseTRPCQueryResult<any, any> }) => {
       device.refetch();
     });
   };
-  useEffect(() => {
-    console.log(ratable.data);
-  }, [ratable.data]);
   const ratingVal = rating.data ? String(rating.data.rate) : "";
   return (
     <div className="flex gap-2 items-center">

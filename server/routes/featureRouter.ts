@@ -1,5 +1,5 @@
-import { router, procedure, adminProcedure } from "../trpc";
-import featureFlags from "../ff/featureFlags.json";
+import { router, procedure } from "../trpc";
+import featureFlags from "../featureFlags.json";
 
 export const featureRouter = router({
   get: procedure.mutation(async () => {

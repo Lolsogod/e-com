@@ -8,7 +8,7 @@ const formatDate = (date: string) => {
   return d.toLocaleDateString();
 }
 
-const PurchaseCard = ({ purchase }:{purchase: RouterOutputs["user"]["getUserPurchases"][number]}) => (
+const PurchaseCard = ({ purchase }: { purchase: RouterOutputs["user"]["getUserPurchases"][number] }) => (
   <Card key={purchase.id} className="p-4 flex justify-between">
     <div>
       <CardTitle className="pb-4">

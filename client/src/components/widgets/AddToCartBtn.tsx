@@ -12,7 +12,7 @@ const AddToCartBtn = (props: { device: Device; className?: string }) => {
   const { device } = props;
   const { addItem } = useCart();
   const { token } = useAuth();
-  if (flags?.CART === false) return null
+  if (flags?.CART === false || !device) return null
   if (!token)
     return (
       <Link

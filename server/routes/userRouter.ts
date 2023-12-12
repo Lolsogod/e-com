@@ -20,7 +20,7 @@ export const userRouter = router({
     .input(
       z.object({
         email: z.string(),
-        password: z.string(),
+        password: z.string().min(6),
         role: z.enum(["ADMIN", "USER"]).optional(),
       })
     )
@@ -68,7 +68,7 @@ export const userRouter = router({
         });
       }
       const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch){
+      if (!isMatch) {
         logger.error(`incorrect password for user ${email}`);
         throw new TRPCError({
           code: "BAD_REQUEST",
@@ -95,17 +95,22 @@ export const userRouter = router({
           purchaseId: newPurchase.id,
         };
       });
-      await prisma.purchaseDevice.createMany({
-        data: purchaseDeviceRecords,
-      }).then(() => {
-        logger.info(`purchase ${newPurchase.id} created by user ${ctx.user.id} succesfully`);
-      }).catch((error) => {
-        logger.error(error);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: error.message,
+      await prisma.purchaseDevice
+        .createMany({
+          data: purchaseDeviceRecords,
+        })
+        .then(() => {
+          logger.info(
+            `purchase ${newPurchase.id} created by user ${ctx.user.id} succesfully`
+          );
+        })
+        .catch((error) => {
+          logger.error(error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: error.message,
+          });
         });
-      });
       return newPurchase;
     }),
   getOnePurchase: protectedProcedure
@@ -119,11 +124,7 @@ export const userRouter = router({
         include: {
           purchaseDevices: {
             include: {
-              device: {
-                include: {
-                  brand: true,
-                },
-              },
+              device: { include: { brand: true } },
             },
           },
         },
@@ -137,11 +138,7 @@ export const userRouter = router({
       include: {
         purchaseDevices: {
           include: {
-            device: {
-              include: {
-                brand: true,
-              },
-            },
+            device: { include: { brand: true } },
           },
         },
       },
@@ -150,24 +147,27 @@ export const userRouter = router({
   //админ штуки
   getAll: adminProcedure.query(async () => {
     return await prisma.user.findMany({
-      orderBy: { id: "asc",},
+      orderBy: { id: "asc" },
     });
   }),
   delete: adminProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
-      return await prisma.user.delete({
-        where: { id: input.id },
-      }).then((user) => {
-        logger.info(`user ${user.email} deleted`);
-        return user;
-      }).catch((error) => {
-        logger.error(error);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: error.message,
+      return await prisma.user
+        .delete({
+          where: { id: input.id },
+        })
+        .then((user) => {
+          logger.info(`user ${user.email} deleted`);
+          return user;
+        })
+        .catch((error) => {
+          logger.error(error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: error.message,
+          });
         });
-      });
     }),
   changeRole: adminProcedure
     .input(z.object({ id: z.number(), role: z.enum(["ADMIN", "USER"]) }))

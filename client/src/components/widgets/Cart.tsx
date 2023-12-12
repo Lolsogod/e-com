@@ -16,6 +16,7 @@ import { trpc } from "@/utils/trpc";
 import { router } from "@/router/router";
 import { cn } from "@/lib/utils";
 import { useFlags } from "@/store/useFlags";
+import { toast } from "react-toastify";
 
 const Cart = () => {
   const { flags } = useFlags();
@@ -28,6 +29,9 @@ const Cart = () => {
     await purchase.mutateAsync({ ids }).then((purchase) => {
       clear();
       router.navigate({ to: "/purchases/$purchaseId", params: { purchaseId: String(purchase.id) } });
+    }).catch((error) => {
+      console.error(error);
+      toast.error("Ошибка при оплате");
     });
   };
   if (flags?.CART === false) return <div className={cn(navigationMenuTriggerStyle(), "group inline-flex cursor-not-allowed text-gray-400 hover:text-gray-400 select-none")}>Корзина</div>;

@@ -1,4 +1,4 @@
-import { RouterOutputs, trpc } from "@/utils/trpc";
+import { RouterOutputs } from "@/utils/trpc";
 import {create} from "zustand"
 import {persist, createJSONStorage} from "zustand/middleware"
 
