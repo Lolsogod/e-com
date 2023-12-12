@@ -33,8 +33,8 @@ const BrandList = (props: { trpc: TrpcClient  }) => {
         <TableRow>
           <TableHead className="w-[100px]">Id</TableHead>
           <TableHead>Название</TableHead>
-          <TableHead className="w-[100px]">Удалить</TableHead>
-          <TableHead className="w-[100px]">Сохранить</TableHead>
+          <TableHead className="w-[50px]">Удалить</TableHead>
+          <TableHead className="w-[50px]">Сохранить</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

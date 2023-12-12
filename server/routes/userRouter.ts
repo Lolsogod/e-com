@@ -1,4 +1,4 @@
-import { router, procedure, protectedProcedure } from "../trpc";
+import { router, procedure, protectedProcedure, adminProcedure } from "../trpc";
 import prisma from "../prisma/client";
 import bcrypt from "bcrypt";
 import { z } from "zod";
@@ -148,12 +148,12 @@ export const userRouter = router({
     });
   }),
   //админ штуки
-  getAll: procedure.query(async () => {
+  getAll: adminProcedure.query(async () => {
     return await prisma.user.findMany({
       orderBy: { id: "asc",},
     });
   }),
-  delete: protectedProcedure
+  delete: adminProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       return await prisma.user.delete({
@@ -169,7 +169,7 @@ export const userRouter = router({
         });
       });
     }),
-  changeRole: protectedProcedure
+  changeRole: adminProcedure
     .input(z.object({ id: z.number(), role: z.enum(["ADMIN", "USER"]) }))
     .mutation(async ({ input }) => {
       return await prisma.user

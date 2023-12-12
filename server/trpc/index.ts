@@ -26,19 +26,30 @@ export async function createContext({
 type Context = Awaited<ReturnType<typeof createContext>>;
 
 const t = initTRPC.context<Context>().create();
+
 const isAuthed = t.middleware((opts) => {
   const { ctx } = opts;
   if (!ctx.user) {
-    logger.error("Authorization failed");
+    logger.error("Not authorized user tryed to access protected route");
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return opts.next({
-    ctx: {
-      user: ctx.user,
-    },
+    ctx: { user: ctx.user },
+  });
+});
+
+const isAdmin = t.middleware((opts) => {
+  const { ctx } = opts;
+  if (ctx.user?.role !== "ADMIN") {
+    logger.error("Not authorized user tryed to access admin route");
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  return opts.next({
+    ctx: { user: ctx.user },
   });
 });
 export const protectedProcedure = t.procedure.use(isAuthed);
+export const adminProcedure = t.procedure.use(isAdmin);
 export const middleware = t.middleware;
 export const router = t.router;
 export const procedure = t.procedure;

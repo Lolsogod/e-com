@@ -1,5 +1,4 @@
 import { brandRouter } from "./brandRouter";
-import { typeRouter } from "./typeRouter";
 import { deviceRouter } from "./deviceRouter";
 import { userRouter } from "./userRouter";
 
@@ -10,7 +9,6 @@ import { router } from "../trpc";
 //TODO: add controllers maybe and error handling
 const appRouter = router({
   brand: brandRouter,
-  type: typeRouter,
   device: deviceRouter,
   user: userRouter,
 });

@@ -1,4 +1,4 @@
-import { router, procedure, protectedProcedure } from "../trpc";
+import { router, procedure, protectedProcedure, adminProcedure } from "../trpc";
 import prisma from "../prisma/client";
 import { z } from "zod";
 import { logger } from "../logger";
@@ -32,7 +32,7 @@ export const deviceRouter = router({
         },
       });
     }),
-  create: procedure
+  create: adminProcedure
     .input(
       z.object({
         name: z.string(),
@@ -114,9 +114,9 @@ export const deviceRouter = router({
         },
       });
     }),
-  delete: protectedProcedure
+  delete: adminProcedure
     .input(z.object({ id: z.number() }))
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ input }) => {
       return await prisma.device.delete({
         where: {
           id: input.id,
@@ -125,7 +125,7 @@ export const deviceRouter = router({
         logger.info(`device ${input.id} was deleted`);
       });
     }),
-  update: protectedProcedure
+  update: adminProcedure
     .input(
       z.object({
         id: z.number(),

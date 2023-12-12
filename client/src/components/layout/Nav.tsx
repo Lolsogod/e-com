@@ -33,8 +33,8 @@ const Nav = () => {
           )}
           {info.role == "ADMIN" && (
             <NavigationMenuItem className="group inline-flex">
-              <Link to="/t-admin" className={navigationMenuTriggerStyle()}>
-                Админка
+              <Link to="/admin" className={navigationMenuTriggerStyle()}>
+                Админ Панель
               </Link>
             </NavigationMenuItem>
           )}

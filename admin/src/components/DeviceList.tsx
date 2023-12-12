@@ -63,8 +63,8 @@ const DeviceList = (props: { trpc: TrpcClient }) => {
             <TableHead>Цена</TableHead>
             <TableHead>Описание</TableHead>
             <TableHead>Картинка</TableHead>
-            <TableHead className="w-[100px]">Удалить</TableHead>
-            <TableHead className="w-[100px]">Сохранить</TableHead>
+            <TableHead className="w-[50px]">Удалить</TableHead>
+            <TableHead className="w-[50px]">Сохранить</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
