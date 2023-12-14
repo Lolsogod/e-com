@@ -11,7 +11,7 @@ const queryClient = new QueryClient();
 const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
-      url: process.env.SERVER + "/trpc",
+      url: "https://a29d-142-93-68-17.ngrok-free.app" + "/trpc",
       async headers() {
         return {
           authorization: "Bearer " + await useAuth.getState().token,

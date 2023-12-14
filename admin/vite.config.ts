@@ -13,7 +13,6 @@ export default defineConfig({
         "./Admin": "./src/App.tsx",
       },
       shared: [
-        "lucide-react",
         "react",
         "react-dom",
         "tailwindcss-animate"

@@ -37,8 +37,8 @@ const Cart = () => {
   if (flags?.CART === false) return <div className={cn(navigationMenuTriggerStyle(), "group inline-flex cursor-not-allowed text-gray-400 hover:text-gray-400 select-none")}>Корзина</div>;
   return (
     <Sheet>
-      <SheetTrigger asChild className={navigationMenuTriggerStyle()}>
-        <span className="cursor-pointer">Корзина {count}</span>
+      <SheetTrigger asChild >
+        <button className={navigationMenuTriggerStyle()}>Корзина {count}</button>
       </SheetTrigger>
       <SheetContent className="flex flex-col gap-1 max-h-screen w-full  ">
         <SheetHeader>

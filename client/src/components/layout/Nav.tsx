@@ -15,20 +15,19 @@ const Nav = () => {
   const { info, token, logout } = useAuth();
   const { flags } = useFlags();
   return (
-    <NavigationMenu className="sticky top-0 bg-white">
-      <NavigationMenuList className="flex justify-between p-4 w-screen">
+    <NavigationMenu className="sticky top-0 bg-white flex justify-between max-w-none w-screen p-4">
         <Link to="/">
-          <h1 className="text-2xl font-bold  self-start">TrueGadget</h1>
+          <h1 className="text-2xl font-bold">TrueGadget</h1>
         </Link>
-        <div>
+         <NavigationMenuList >
           {!token && (
             <>
-              <NavigationMenuItem className="group inline-flex">
+              <NavigationMenuItem>
                 <Link className={navigationMenuTriggerStyle()} to="/login">
                   Войти
                 </Link>
               </NavigationMenuItem>
-              <NavigationMenuItem className="group inline-flex">
+              <NavigationMenuItem>
                 <Link className={navigationMenuTriggerStyle()} to="/register">
                   Зарегестрироваться
                 </Link>
@@ -40,22 +39,22 @@ const Nav = () => {
               {info.role == "ADMIN" && (
                 <>
                   {flags?.ADMIN_PANEL ? (
-                    <NavigationMenuItem className="group inline-flex">
+                    <NavigationMenuItem>
                       <Link to="/admin" className={navigationMenuTriggerStyle()}>
                         Админ Панель
                       </Link>
                     </NavigationMenuItem>
                   ) : (
-                    <NavigationMenuItem className={cn(navigationMenuTriggerStyle(), "group inline-flex cursor-not-allowed text-gray-400 hover:text-gray-400 select-none")}>
+                    <NavigationMenuItem className={cn(navigationMenuTriggerStyle(), "cursor-not-allowed text-gray-400 hover:text-gray-400 select-none")}>
                       Админ Панель
                     </NavigationMenuItem>
                   )}
                 </>
               )}
-              <NavigationMenuItem className="group inline-flex">
+              <NavigationMenuItem>
                 <Cart />
               </NavigationMenuItem>
-              <NavigationMenuItem className="group inline-flex">
+              <NavigationMenuItem>
                 <button
                   className={navigationMenuTriggerStyle()}
                   onClick={logout}
@@ -63,15 +62,13 @@ const Nav = () => {
                   Выйти
                 </button>
               </NavigationMenuItem>
-              <NavigationMenuItem className="group inline-flex">
+              <NavigationMenuItem>
                 <Link className={navigationMenuTriggerStyle()} to="/profile">
                   Профиль
                 </Link>
               </NavigationMenuItem>
             </>
-          )}
-        </div>
-      </NavigationMenuList>
+          )}</NavigationMenuList>
     </NavigationMenu>
   );
 };

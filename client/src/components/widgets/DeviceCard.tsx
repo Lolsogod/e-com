@@ -23,7 +23,7 @@ const DeviceCard = (props: { device: Device }) => {
           </CardTitle>
           <CardDescription>{device?.price} руб.</CardDescription>
         </CardHeader>
-        <CardContent className="flex justify-center">
+        <CardContent className="flex justify-center h-[300px]">
           <img loading="lazy" className="max-w-[300px] max-h-[300px] w-auto h-auto block" src={device?.img} alt="image.." />
         </CardContent>
       </Link>
